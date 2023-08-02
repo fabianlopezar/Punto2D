@@ -5,7 +5,6 @@
  */
 package vista;
 
-
 import modelo.Punto2D;
 import modelo.Utilities;
 import java.awt.event.MouseAdapter;
@@ -63,6 +62,10 @@ public class UIpunto extends javax.swing.JFrame {
 
         SaveButton = new javax.swing.JButton();
         LoadButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ShowText = new javax.swing.JTextArea();
+        ShowPointsButton = new javax.swing.JButton();
+        QuitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,41 +83,75 @@ public class UIpunto extends javax.swing.JFrame {
             }
         });
 
+        ShowText.setEditable(false);
+        ShowText.setColumns(20);
+        ShowText.setRows(5);
+        jScrollPane1.setViewportView(ShowText);
+
+        ShowPointsButton.setText("Show Points");
+        ShowPointsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowPointsButtonActionPerformed(evt);
+            }
+        });
+
+        QuitButton.setText("Quit");
+        QuitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                QuitButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(524, Short.MAX_VALUE)
+                .addContainerGap(511, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LoadButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SaveButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(LoadButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(QuitButton)
+                        .addGap(16, 16, 16)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(ShowPointsButton))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ShowPointsButton)
+                .addGap(18, 18, 18)
                 .addComponent(SaveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LoadButton)
-                .addContainerGap(293, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(QuitButton)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void LoadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadButtonActionPerformed
-        // TODO add your handling code here:
+        try {
+            listaPuntos2D = Utilities.readFile();
+            JOptionPane.showMessageDialog(null, "Si se cargo el archivo.");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "error");
+        }
     }//GEN-LAST:event_LoadButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
         try {
             // Guardar la lista de puntos en formato JSON
-            Gson gson = new Gson();
-            String json = gson.toJson(listaPuntos2D);
-            System.out.println("JSON: " + json);
-            
+
             boolean t = Utilities.saveFile(listaPuntos2D);
             if (t) {
                 JOptionPane.showMessageDialog(null, "Si se guardo el archivo en la raiz");
@@ -126,6 +163,18 @@ public class UIpunto extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_SaveButtonActionPerformed
+
+    private void ShowPointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowPointsButtonActionPerformed
+         String mostrar = "";
+        for (Punto2D elem : listaPuntos2D) {
+            mostrar += elem.toString();
+        }
+        ShowText.setText(mostrar);
+    }//GEN-LAST:event_ShowPointsButtonActionPerformed
+
+    private void QuitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitButtonActionPerformed
+   System.exit(0);
+    }//GEN-LAST:event_QuitButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,6 +224,10 @@ public class UIpunto extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton LoadButton;
+    private javax.swing.JButton QuitButton;
     private javax.swing.JButton SaveButton;
+    private javax.swing.JButton ShowPointsButton;
+    private javax.swing.JTextArea ShowText;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
